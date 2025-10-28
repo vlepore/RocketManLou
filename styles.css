@@ -1,0 +1,714 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background: #000;
+    color: #0f0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* CRT Effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 0, 0.03),
+        rgba(0, 255, 0, 0.03) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 1000;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+    pointer-events: none;
+    z-index: 999;
+}
+
+.game-container {
+    position: relative;
+    width: 640px;
+    height: 480px;
+    max-width: 90vw;
+    max-height: 90vh;
+    border: 8px solid #0f0;
+    box-shadow: 
+        0 0 30px #0f0, 
+        inset 0 0 20px rgba(0, 255, 0, 0.2),
+        0 0 50px rgba(0, 255, 0, 0.5);
+    background: #000;
+    overflow: hidden;
+}
+
+.mute-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+    background: rgba(0, 255, 0, 0.2);
+    border: 2px solid #0f0;
+    color: #0f0;
+    font-size: 20px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.mute-btn:hover {
+    background: rgba(0, 255, 0, 0.4);
+    box-shadow: 0 0 10px #0f0;
+}
+
+/* Screens */
+.screen {
+    display: none;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Start Screen */
+.game-title {
+    font-size: 1.8rem;
+    color: #ff0;
+    text-shadow: 
+        2px 2px 0px #f0f,
+        4px 4px 0px #0ff,
+        0 0 8px rgba(255, 255, 0, 0.6),
+        0 0 15px rgba(255, 255, 0, 0.4);
+    margin-bottom: 8px;
+    animation: glow 2s ease-in-out infinite;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.subtitle {
+    font-size: 0.7rem;
+    color: #0ff;
+    margin-bottom: 12px;
+    text-shadow: 2px 2px 0px #000, 0 0 10px #0ff;
+}
+
+.obstacles-preview {
+    margin: 8px 0;
+    padding: 10px;
+    border: 2px solid #0f0;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.obstacles-preview h2 {
+    font-size: 0.65rem;
+    color: #ff0;
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 0px #000, 0 0 10px #ff0;
+}
+
+.powerup-heading {
+    margin-top: 8px;
+    color: #FFD700 !important;
+}
+
+.powerup-showcase {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.obstacle-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.obstacle-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.obstacle-item p {
+    font-size: 0.45rem;
+    color: #0ff;
+    text-shadow: 1px 1px 0px #000, 0 0 5px #0ff;
+}
+
+.obstacle-icon {
+    width: 30px;
+    height: 30px;
+    image-rendering: pixelated;
+}
+
+.controls-info {
+    margin: 8px 0 5px 0;
+    font-size: 0.5rem;
+    color: #0f0;
+}
+
+.controls-info p {
+    margin: 3px 0;
+    text-shadow: 1px 1px 0px #000, 0 0 5px #0f0;
+}
+
+.start-instruction {
+    font-size: 0.7rem;
+    color: #ff0;
+    margin-top: 8px;
+    text-shadow: 2px 2px 0px #000, 0 0 10px #ff0;
+}
+
+.mobile-instruction {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .start-instruction:not(.mobile-instruction) {
+        display: none;
+    }
+    .mobile-instruction {
+        display: block;
+    }
+}
+
+.blink {
+    animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        text-shadow: 
+            2px 2px 0px #f0f,
+            4px 4px 0px #0ff,
+            0 0 8px rgba(255, 255, 0, 0.6),
+            0 0 15px rgba(255, 255, 0, 0.4);
+    }
+    50% {
+        text-shadow: 
+            2px 2px 0px #f0f,
+            4px 4px 0px #0ff,
+            0 0 12px rgba(255, 255, 0, 0.8),
+            0 0 20px rgba(255, 255, 0, 0.5);
+    }
+}
+
+/* Game Screen */
+.hud {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    font-size: 0.7rem;
+    color: #0f0;
+    border-bottom: 2px solid #0f0;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.game-area {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    min-height: 400px;
+    background: #000;
+    overflow: hidden;
+}
+
+/* Game Objects */
+.rocket {
+    position: absolute;
+    width: 50px;
+    height: 70px;
+    bottom: 50px;
+    pointer-events: none;
+}
+
+/* Rocket nose cone */
+.rocket::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 28px solid #ff0;
+    top: 0;
+    left: 0;
+    filter: drop-shadow(0 0 5px #ff0);
+}
+
+/* Rocket body */
+.rocket::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 35px;
+    background: linear-gradient(to bottom, #0ff 0%, #0ff 60%, #08f 100%);
+    left: 10px;
+    top: 26px;
+    border: 2px solid #0f0;
+    box-shadow: 0 0 8px #0ff, inset 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* Rocket window */
+.rocket .window {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle, #fff 0%, #0ff 70%, #08f 100%);
+    border: 2px solid #0f0;
+    border-radius: 50%;
+    left: 19px;
+    top: 35px;
+    z-index: 2;
+    box-shadow: 0 0 5px #fff;
+}
+
+/* Rocket fins */
+.rocket .fin-left,
+.rocket .fin-right {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    top: 45px;
+    filter: drop-shadow(0 0 3px #f0f);
+}
+
+.rocket .fin-left {
+    border-right: 15px solid #f0f;
+    left: -10px;
+}
+
+.rocket .fin-right {
+    border-left: 15px solid #f0f;
+    right: -10px;
+}
+
+.rocket .flame {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 25px solid #ff0;
+    animation: flameFlicker 0.1s infinite;
+    filter: drop-shadow(0 0 8px #ff0);
+}
+
+@keyframes flameFlicker {
+    0%, 100% {
+        border-top-color: #ff0;
+        transform: translateX(-50%) scaleY(1);
+    }
+    50% {
+        border-top-color: #f80;
+        transform: translateX(-50%) scaleY(1.2);
+    }
+}
+
+/* Obstacle Sprites */
+.obstacle {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+}
+
+/* Nick's Cold Cuts - Sandwich */
+.coldcuts {
+    background: 
+        linear-gradient(to bottom,
+            #8B4513 0%, #8B4513 20%,
+            #FFD700 20%, #FFD700 30%,
+            #FF6347 30%, #FF6347 40%,
+            #90EE90 40%, #90EE90 50%,
+            #FF6347 50%, #FF6347 60%,
+            #FFD700 60%, #FFD700 70%,
+            #8B4513 70%, #8B4513 100%
+        );
+    border: 2px solid #0f0;
+    box-shadow: 0 0 5px #0f0;
+}
+
+/* Gaeta's Juice - Juice Box */
+.juice {
+    background: #FF8C00;
+    border: 2px solid #0f0;
+    position: relative;
+    box-shadow: 0 0 5px #0f0;
+}
+
+.juice::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 12px;
+    background: #fff;
+    border: 2px solid #0f0;
+}
+
+.juice::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    height: 15px;
+    background: #FFD700;
+    border: 1px solid #0f0;
+}
+
+/* Kevin - Falling Person */
+.kevin {
+    position: relative;
+}
+
+.kevin::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: #FFA07A;
+    border-radius: 50%;
+    border: 2px solid #0f0;
+}
+
+.kevin::after {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 20px;
+    background: #0ff;
+    box-shadow: 
+        -6px 5px 0 0 #0ff,
+        6px 5px 0 0 #0ff,
+        -4px 18px 0 0 #0ff,
+        4px 18px 0 0 #0ff;
+}
+
+/* Nicky's Basketball */
+.basketball {
+    background: #FF8C00;
+    border-radius: 50%;
+    border: 2px solid #0f0;
+    position: relative;
+    box-shadow: 0 0 5px #0f0;
+}
+
+.basketball::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #000;
+}
+
+.basketball::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #000;
+}
+
+/* Lou's Snacks - Powerup */
+.loussnacks {
+    background: 
+        linear-gradient(135deg,
+            #FFD700 0%, #FFD700 25%,
+            #FF69B4 25%, #FF69B4 50%,
+            #FFD700 50%, #FFD700 75%,
+            #FF69B4 75%, #FF69B4 100%
+        );
+    border: 3px solid #fff;
+    box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700;
+    position: relative;
+    animation: powerupPulse 0.5s ease-in-out infinite;
+}
+
+.loussnacks::before {
+    content: 'L';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    color: #fff;
+    text-shadow: 2px 2px 0px #000;
+    font-weight: bold;
+}
+
+@keyframes powerupPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700;
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px #FFD700, 0 0 30px #FFD700, 0 0 40px #FFD700;
+    }
+}
+
+/* Pause Overlay */
+.pause-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.pause-overlay.active {
+    display: flex;
+}
+
+.pause-overlay h2 {
+    font-size: 2rem;
+    color: #ff0;
+    margin-bottom: 20px;
+}
+
+.pause-overlay p {
+    font-size: 0.8rem;
+    color: #0f0;
+}
+
+/* Game Over Screen */
+.game-over-title {
+    font-size: 2rem;
+    color: #f00;
+    text-shadow: 
+        2px 2px 0px #000,
+        0 0 8px rgba(255, 0, 0, 0.6),
+        0 0 15px rgba(255, 0, 0, 0.4);
+    margin-bottom: 20px;
+}
+
+.final-score {
+    font-size: 1.2rem;
+    color: #ff0;
+    margin-bottom: 30px;
+}
+
+.name-entry {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.name-entry label {
+    font-size: 0.7rem;
+    color: #0ff;
+}
+
+.name-entry input {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    padding: 10px;
+    background: #000;
+    border: 2px solid #0f0;
+    color: #0f0;
+    text-align: center;
+    outline: none;
+    text-transform: uppercase;
+}
+
+.name-entry input:focus {
+    box-shadow: 0 0 10px #0f0;
+}
+
+.retro-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.7rem;
+    padding: 12px 24px;
+    background: #000;
+    border: 3px solid #0f0;
+    color: #0f0;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.retro-btn:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 15px #0f0;
+}
+
+.retro-btn:active {
+    transform: scale(0.95);
+}
+
+.leaderboard {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px 0;
+    padding: 20px;
+    border: 2px solid #0f0;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.leaderboard h2 {
+    font-size: 0.9rem;
+    color: #ff0;
+    margin-bottom: 15px;
+}
+
+#leaderboardList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.leaderboard-entry {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6rem;
+    color: #0ff;
+    padding: 8px;
+    border: 1px solid #0f0;
+    background: rgba(0, 255, 0, 0.02);
+}
+
+.leaderboard-entry.highlight {
+    background: rgba(255, 255, 0, 0.2);
+    color: #ff0;
+    border-color: #ff0;
+}
+
+.leaderboard-rank {
+    color: #f0f;
+    min-width: 30px;
+}
+
+.leaderboard-name {
+    flex: 1;
+    text-align: center;
+}
+
+.leaderboard-score {
+    color: #0f0;
+    min-width: 80px;
+    text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .obstacles-preview h2 {
+        font-size: 0.8rem;
+    }
+    
+    .obstacle-item p {
+        font-size: 0.5rem;
+    }
+    
+    .controls-info {
+        font-size: 0.6rem;
+    }
+    
+    .hud {
+        font-size: 0.6rem;
+    }
+    
+    .start-instruction {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 1.5rem;
+    }
+    
+    .subtitle {
+        font-size: 0.7rem;
+    }
+    
+    .obstacle-list {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .obstacle-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .obstacles-preview h2 {
+        font-size: 0.7rem;
+    }
+    
+    .obstacle-item p {
+        font-size: 0.45rem;
+    }
+}
+

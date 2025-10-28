@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROCKETMAN LOU</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="theme.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="game-container">
+        <button id="muteBtn" class="mute-btn">🔊</button>
+        
+        <!-- Start Screen -->
+        <div id="startScreen" class="screen active">
+            <h1 class="game-title">ROCKETMAN LOU</h1>
+            <p class="subtitle">AVOID THE OBSTACLES!</p>
+            
+            <div class="obstacles-preview">
+                <h2>WATCH OUT FOR:</h2>
+                <div class="obstacle-list">
+                    <div class="obstacle-item">
+                        <div class="obstacle-icon coldcuts"></div>
+                        <p>NICK'S COLD CUTS</p>
+                    </div>
+                    <div class="obstacle-item">
+                        <div class="obstacle-icon juice"></div>
+                        <p>GAETA'S JUICE</p>
+                    </div>
+                    <div class="obstacle-item">
+                        <div class="obstacle-icon kevin"></div>
+                        <p>KEVIN</p>
+                    </div>
+                    <div class="obstacle-item">
+                        <div class="obstacle-icon basketball"></div>
+                        <p>NICKY'S BASKETBALL</p>
+                    </div>
+                </div>
+                
+                <h2 class="powerup-heading">COLLECT FOR POINTS:</h2>
+                <div class="powerup-showcase">
+                    <div class="obstacle-item">
+                        <div class="obstacle-icon loussnacks"></div>
+                        <p>LOU'S SNACKS (+50 PTS)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls-info">
+                <p>DESKTOP: ARROW KEYS TO MOVE</p>
+                <p>MOBILE: TOUCH TO MOVE</p>
+            </div>
+            
+            <p class="start-instruction blink">PRESS SPACE TO START</p>
+            <p class="start-instruction mobile-instruction">TAP TO START</p>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="screen">
+            <div class="hud">
+                <div class="score-display">
+                    SCORE: <span id="score">0</span>
+                </div>
+                <div class="difficulty-display">
+                    LEVEL: <span id="level">1</span>
+                </div>
+            </div>
+            
+            <div id="gameArea" class="game-area">
+                <!-- Game objects will be dynamically added here -->
+            </div>
+            
+            <div id="pauseOverlay" class="pause-overlay">
+                <h2>PAUSED</h2>
+                <p>PRESS P TO RESUME</p>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="screen">
+            <h1 class="game-over-title">GAME OVER</h1>
+            <div class="final-score">
+                FINAL SCORE: <span id="finalScore">0</span>
+            </div>
+            
+            <div class="name-entry">
+                <label for="playerName">ENTER NAME:</label>
+                <input type="text" id="playerName" maxlength="10" placeholder="PLAYER">
+                <button id="submitScore" class="retro-btn">SUBMIT</button>
+            </div>
+            
+            <div class="leaderboard">
+                <h2>TOP 10 SCORES</h2>
+                <div id="leaderboardList"></div>
+            </div>
+            
+            <button id="restartBtn" class="retro-btn">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
+
