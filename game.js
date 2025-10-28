@@ -78,6 +78,16 @@ function setupMusic() {
     // Ensure music loops
     bgMusic.loop = true;
     bgMusic.volume = 0.5;
+    
+    // Try to play music immediately on page load
+    // May be blocked by browser until user interaction
+    bgMusic.play().catch(e => {
+        console.log('Autoplay prevented, will play on first interaction');
+        // If autoplay is blocked, play on first user interaction
+        document.addEventListener('click', () => {
+            bgMusic.play().catch(err => console.log('Music play failed'));
+        }, { once: true });
+    });
 }
 
 function setupEventListeners() {
@@ -196,8 +206,10 @@ function startGame() {
     currentObstacleSpeed = baseObstacleSpeed;
     currentSpawnRate = baseSpawnRate;
     
-    // Play music
-    bgMusic.play().catch(e => console.log('Music autoplay prevented'));
+    // Ensure music is playing (it should already be playing from page load)
+    if (bgMusic.paused) {
+        bgMusic.play().catch(e => console.log('Music play failed'));
+    }
     
     // Switch screens
     startScreen.classList.remove('active');
